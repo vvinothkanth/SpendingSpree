@@ -40,42 +40,28 @@ namespace SpendingSpreeProgram
         }        
 
         /// <summary>
-        /// To generate the randome price amount in between 1000$ doller 
-        /// </summary>
-        /// <returns>randome price amount</returns>
-        public static double generateRamdomePrice()
-        {
-            double randomePrice = 0.0;
-            try
-            {
-                Random random = new Random();
-                randomePrice = random.Next(50,1000); 
-            }
-            catch (ArgumentOutOfRangeException randomeException)
-            {
-                throw new ArgumentOutOfRangeException(randomeException.Message);
-            }
-
-            return randomePrice;
-        }
-
-        /// <summary>
         /// To inform the amount of purchasing 
         /// </summary>
         /// <returns>string of query</returns>
-        public static string costEntryQuery(double queryPrice)
+        public static double costEntryQuery()
         {
-            string costQuery = string.Empty;
+            double userEnteredAmount = 0.0;
             try
             {
-                Console.WriteLine("Enter the cost of the item that you want to buy {0}", queryPrice);
+                Console.Write("Enter the cost of the item that you want to buy $");
+                userEnteredAmount = Convert.ToDouble(Console.ReadLine());
+                if (userEnteredAmount <= 0)
+                {
+                    Console.WriteLine("Enter Valid Amount");
+                    startPurchase();
+                }
             }
             catch (ArgumentNullException argumentException)
             {
                 throw new ArgumentNullException(argumentException.Message);
             }
 
-            return costQuery;
+            return userEnteredAmount;
         }
 
         /// <summary>
@@ -83,22 +69,18 @@ namespace SpendingSpreeProgram
         /// </summary>
         /// <param name="randomePrice">purchase Amount</param>
         /// <returns>Wallet Balance</returns>
-        public static double getAmount(double randomePrice)
+        public static double getWalletAmount(double randomePrice)
         {
             try
             {
-                double userEnteredAmount = Convert.ToDouble(Console.ReadLine());
-                if (userEnteredAmount == randomePrice)
-                {
                     if (purcheshConfirmation(randomePrice) == true)
                     {
                        UserWallet = withdrawOrDebuitAmount(randomePrice);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Wrong Entry try again");
-                }
+                    else
+                    {
+                        Console.WriteLine("Try Later...");
+                    }
             }
             catch (ArithmeticException cannotProcess)
             {
@@ -113,7 +95,7 @@ namespace SpendingSpreeProgram
         /// </summary>
         /// <param name="randomePrice">PriceValue</param>
         /// <returns>true/false</returns>
-        public static bool checkBalance(double priceValue)
+        public static bool checkWalletBalance(double priceValue)
         {
             bool balanceStatus = false;
             try
@@ -123,9 +105,9 @@ namespace SpendingSpreeProgram
                     balanceStatus = true;
                 }
             }
-            catch (ArgumentException argument)
+            catch (ArithmeticException argument)
             {
-                throw new ArgumentException(argument.Message);
+                throw new ArithmeticException(argument.Message);
             }
 
             return balanceStatus;
@@ -141,7 +123,7 @@ namespace SpendingSpreeProgram
             bool confirmStatus = false;
             try
             {
-                if (checkBalance(confirmamount) == true)
+                if (checkWalletBalance(confirmamount) == true)
                 {
                     Console.WriteLine("Are you sure that you want to purchase the ${0} item ? (yes or no) ", confirmamount);
                 }
@@ -173,7 +155,7 @@ namespace SpendingSpreeProgram
         {
             try
             {
-                if (checkBalance(purchasedAmount) == true)
+                if (checkWalletBalance(purchasedAmount) == true)
                 {
                     UserWallet -= purchasedAmount;
                 }
@@ -204,9 +186,9 @@ namespace SpendingSpreeProgram
             try
             {
                 Console.WriteLine("You have ${0} money remaining to spend. \n", SpendingSpree.UserWallet);
-                double randomePrize = SpendingSpree.generateRamdomePrice();
-                SpendingSpree.costEntryQuery(randomePrize);
-                double remainingAmount = SpendingSpree.getAmount(randomePrize);
+                //double randomePrize = SpendingSpree.generateRamdomePrice();
+                double randomePrize = SpendingSpree.costEntryQuery();
+                double remainingAmount = SpendingSpree.getWalletAmount(randomePrize);
                 startPurchase();
             }
             catch (Exception porcessFlowException)
