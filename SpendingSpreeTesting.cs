@@ -2,7 +2,7 @@
 // Auther : Vinothkanth V
 //  Creation date :29 /7/ 2018
 //
-// ************************
+// ----------------------------------
 
 /// <summary>
 /// The SpendingSpreeProgram Namespace
@@ -19,19 +19,24 @@ namespace PortFolioTestCaseOne
     [TestClass]
     public class SpendingSpreeTesting
     {
+        SpendingSpree spendingSpree = new SpendingSpree();
         /// <summary>
         /// To check the balence is available in user wallet
         /// </summar>
         [TestMethod]
         public void checkAccountBalance()
+
         {
             try
             {
-                Assert.IsFalse(SpendingSpree.checkWalletBalance(1600));
-                Assert.IsFalse(SpendingSpree.checkWalletBalance(1200));
-                Assert.IsTrue(SpendingSpree.checkWalletBalance(-1400));
-                Assert.IsTrue(SpendingSpree.checkWalletBalance(400));
-                Assert.IsTrue(SpendingSpree.checkWalletBalance(900));
+                spendingSpree.UserWallet = 1000;
+                Assert.IsFalse(spendingSpree.isUserHaveRequirAmount(1600));
+                Assert.IsFalse(spendingSpree.isUserHaveRequirAmount(1200));
+                Assert.IsFalse(spendingSpree.isUserHaveRequirAmount(1500));
+
+                Assert.IsTrue(spendingSpree.isUserHaveRequirAmount(400));
+                Assert.IsTrue(spendingSpree.isUserHaveRequirAmount(900));
+                Assert.IsTrue(spendingSpree.isUserHaveRequirAmount(900));
             }
             catch (ArithmeticException e)
             {
@@ -48,7 +53,12 @@ namespace PortFolioTestCaseOne
         {
             try
             {
-                double amount = SpendingSpree.withdrawOrDebuitAmount(1200);
+                spendingSpree.UserWallet = 1000;
+                double amount = spendingSpree.withdrawOrDebuitAmount(1200);
+                double amountLow = spendingSpree.withdrawOrDebuitAmount(600);
+
+                Assert.AreEqual(-800, amountLow);
+                Assert.AreNotEqual(400, amountLow);
                 Assert.AreEqual(-200, amount);
                 Assert.AreNotEqual(2200, amount);
                 Assert.AreNotEqual(300, amount);
@@ -68,10 +78,11 @@ namespace PortFolioTestCaseOne
         {
             try
             {
-                double amount = SpendingSpree.withdrawOrDebuitAmount(-500);
+                spendingSpree.UserWallet = 1000;
+                double amount = spendingSpree.withdrawOrDebuitAmount(-500);
                 Assert.AreNotEqual(500, amount);
-                Assert.AreNotEqual(-500, amount);
-                Assert.AreEqual(300, amount);
+                Assert.AreEqual(-500, amount);
+                Assert.AreNotEqual(300, amount);
             }
             catch (ArithmeticException e)
             {
@@ -86,21 +97,12 @@ namespace PortFolioTestCaseOne
         [TestMethod]
         public void purchaseMethos()
         {
-            Assert.IsTrue(SpendingSpree.purcheshConfirmation(300));
-            Assert.IsTrue(SpendingSpree.purcheshConfirmation(700));
-            Assert.IsTrue(SpendingSpree.purcheshConfirmation(-100));
+            Assert.IsTrue(spendingSpree.isPurchaseConfirm("yes"));
+            Assert.IsTrue(spendingSpree.isPurchaseConfirm("Yes"));
+            Assert.IsFalse(spendingSpree.isPurchaseConfirm("no"));
+            Assert.IsFalse(spendingSpree.isPurchaseConfirm("No"));
         }
 
-        /// <summary>
-        /// To test the  balance wallet amount
-        /// </summary>
-        [TestMethod]
-        public void getWallet()
-        {
-            Assert.AreEqual(700, SpendingSpree.getWalletAmount(300));
-            Assert.AreEqual(300, SpendingSpree.getWalletAmount(700));
-            Assert.AreNotEqual(-300, SpendingSpree.getWalletAmount(700));
-        }
        
     }
 }
