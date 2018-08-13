@@ -1,10 +1,8 @@
 ﻿//*************************
 //  Auther : Vinothkanth V
 //  Creation date :27 /7/ 2018
-//  
-//
-//  
-// 
+//   
+//   This is an branch section
 //
 //*************************
 
@@ -27,10 +25,10 @@ namespace SpendingSpreeProgram
         {
             // To start SpendingSpree
             SpendingSpree spendingSpree = new SpendingSpree();
-
+	    Console.WriteLine("Welcome User");
             Console.Write("Please Enter how much purchase  amount you have $:");
             double userWalletAmount = spendingSpree.setInitialPurchaseAmount();
-
+	
             while (spendingSpree.UserWallet > 0)
             {
                 Console.WriteLine("You have ${0} money remaining to spend. \n", spendingSpree.UserWallet);
